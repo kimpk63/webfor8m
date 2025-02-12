@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <title>Starry Background</title>
+    <style>
+        @media only screen and (min-width: 768px) and (max-width: 1024px) {
+    body {
+        font-size: 18px; /* ปรับขนาดฟอนต์ให้เหมาะกับ iPad */
+    }
+
+    .container {
+        max-width: 90%; /* ป้องกันไม่ให้เนื้อหาใหญ่เกินไป */
+    }
+
+    .sidebar {
+        display: none; /* ซ่อน sidebar หากไม่ต้องการให้แสดง */
+    }
+}
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        .fadeText {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+    </style>
+   
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Music Player</title>
+   <style>
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+           font-family: Arial, sans-serif;
+       }
+       body {
+           background: linear-gradient(to right, #121212, #1e1e1e);
+           height: 100vh;
+           overflow: hidden;
+       }
+       .music-player {
+           position: absolute;
+           top: 20px;
+           left: 20px;
+           background: rgba(255, 255, 255, 0.1);
+           backdrop-filter: blur(10px);
+           border-radius: 15px;
+           padding: 20px;
+           text-align: center;
+           color: white;
+           width: 300px;
+           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+       }
+       .cover {
+           width: 80px;
+           height: 80px;
+           border-radius: 50%;
+           overflow: hidden;
+           margin: 10px auto;
+           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+       }
+       .cover img {
+           width: 100%;
+           height: 100%;
+           object-fit: cover;
+       }
+       .title {
+           font-size: 1rem;
+           margin: 10px 0;
+       }
+       .controls {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           margin-top: 10px;
+       }
+       .play-btn {
+    background: none;
+    border: 2px solid white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: 0.3s ease;
+    position: relative; 
+}
+
+.play-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.play-btn i {
+    font-size: 24px; /* ปรับให้ไอคอนใหญ่ขึ้น */
+    color: white;
+    position: absolute; /* ทำให้ไอคอนอยู่ตรงกลางจริงๆ */
+}
+       
+       .progress-container {
+           width: 100%;
+           height: 5px;
+           background: rgba(255, 255, 255, 0.2);
+           border-radius: 5px;
+           margin-top: 15px;
+           position: relative;
+           cursor: pointer;
+       }
+       .progress {
+           width: 0;
+           height: 5px;
+           background: white;
+           border-radius: 5px;
+           position: absolute;
+       }
+       
+       .hidden {
+    display: none;
+}
+
+#videoPopup {
+    display: none; /* ซ่อนวิดีโอไว้ก่อน */
+}
+
+
+/* พื้นหลังมืดสำหรับ Popup */
+#videoPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* กล่องแสดงวิดีโอ */
+.video-container {
+    position: relative;
+    width: 60%;
+    max-width: 800px;
+    background: black;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+/* ปุ่มปิดวิดีโอ */
+#closeButton {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+#closeButton:hover {
+    background: darkred;
+}
+
+/* วิดีโอขนาดกำหนดเอง */
+#videoPlayer {
+    width: 100%;
+    border-radius: 10px;
+}
+
+   </style>
+   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+   
+</head>
+<body>
+
+   
+    <canvas id="starCanvas"></canvas>
+
+    <!-- ข้อความที่ต้องการให้แสดงทีละตัว -->
+    <div class="fadeText">สวัสดีค่ะที่รัก 💖</div>
+    <div class="fadeText">วันนี้เป็นไงบ้างคะ? 😊</div>
+    <div class="fadeText">สุขสันต์วันครบรอบนะคะ เราก็คบกันมา 8 เดือนแล้ว💫</div>
+    <div class="fadeText">อาจมีทะเลาะบ้าง</div>
+    <div class="fadeText">งอนบ้าง</div>
+    <div class="fadeText">ว่ากันบ้าง</div>
+    <div class="fadeText">ด่ากันบ้าง</div>
+    <div class="fadeText">แต่เราก็ผ่านมันมาได้นะคะ วันนี้ก็ 8 เดือนแล้ว</div>
+    <div class="fadeText">ผมพยายามปรับตัวให้เราอยู่ด้วยกันให้ได้อยู่นะคะ อย่าเพิ่งเบื่อกันละ</div>
+<div class="fadeText">แม้เธอจะเป็นยังไง ทำยังไงว่าอะไรผมก็ไม่เคยคิดที่จะเลิกรักเธอเลยนะ</div>
+ <div class="fadeText">ขอบคุณที่อยู่ข้างๆกันนะคะ</div>  
+ <div class="fadeText">แฟนน่ารักที่สุดเลย💖</div> 
+ <div class="fadeText">อยู่ดูแลกันไปแบบนี้นานๆเลยนะคะ</div>
+
+ 
+<!-- กล่องแสดงวิดีโอ (เริ่มต้นถูกซ่อนไว้) -->
+<div id="videoPopup" class="hidden">
+    <div class="video-container">
+        <video id="videoPlayer" controls autoplay>
+            <source src="pic/meyou.mov" type="video/mp4">
+            วิดีโอไม่รองรับบนเบราว์เซอร์ของคุณ
+        </video>
+        <button id="closeButton">✖</button>
+    </div>
+</div>
+
+
+
+
+ <div class="music-player">
+    <div class="cover">
+        <img src="pic/ice.jpg" alt="Album Cover">
+    </div>
+    <div class="title">เพลงประกอบเพื่อแฟนอย่าเพิ่งเปิดคลิปนะรอตัวหนังสือจบก่อน
+    </div>
+    <audio id="music" src="pic/music.mp3"></audio>
+
+    <div class="controls">
+        <button class="play-btn" onclick="toggleMusic()">
+            <i id="playIcon" class="fas fa-play"></i>
+        </button>
+        
+    </div>
+
+    <div class="progress-container" onclick="setProgress(event)">
+        <div class="progress" id="progress"></div>
+    </div>
+    
+    <script>
+   
+   
+
+        window.onload = function () {
+            const texts = document.querySelectorAll(".fadeText");
+            let index = 0;
+
+            function showText() {
+                texts.forEach(text => text.style.opacity = "0"); // ซ่อนทุกข้อความ
+                texts[index].style.opacity = "1"; // แสดงข้อความปัจจุบัน
+
+                setTimeout(() => {
+                    texts[index].style.opacity = "0"; // ทำให้จางหายไป
+                    index = (index + 1) % texts.length; // เลือกข้อความถัดไป
+                    setTimeout(showText, 1000); // หน่วงเวลาก่อนแสดงข้อความใหม่
+                }, 3000); // เวลาในการแสดงผลแต่ละข้อความ
+            }
+
+            showText(); // เริ่มต้นการทำงาน
+        };
+
+
+        window.onload = function () {
+    const texts = document.querySelectorAll(".fadeText");
+    const videoPopup = document.getElementById("videoPopup");
+    const videoPlayer = document.getElementById("videoPlayer");
+    const closeButton = document.getElementById("closeButton");
+    let index = 0;
+
+    function showText() {
+        texts.forEach(text => text.style.opacity = "0"); 
+        texts[index].style.opacity = "1"; 
+
+        setTimeout(() => {
+            texts[index].style.opacity = "0"; 
+            index++;
+
+            if (index < texts.length) {
+                setTimeout(showText, 1000);
+            } else {
+                // เมื่อข้อความทั้งหมดแสดงเสร็จให้แสดงวิดีโอ
+                console.log("ข้อความทั้งหมดแสดงเสร็จแล้ว");
+                setTimeout(showVideo, 1000); // ให้วิดีโอแสดงหลังจากข้อความสุดท้ายหายไป 1 วินาที
+            }
+        }, 3000);
+    }
+
+    function showVideo() {
+        console.log("แสดงวิดีโอ");
+        videoPopup.style.display = "flex"; // แสดง Popup วิดีโอ
+        videoPlayer.play(); // เล่นวิดีโออัตโนมัติ
+    }
+
+    showText();
+
+    // ปิดวิดีโอเมื่อกดปุ่ม ❌
+    closeButton.addEventListener("click", function () {
+        videoPopup.style.display = "none";
+        videoPlayer.pause(); // หยุดวิดีโอเมื่อปิด
+    });
+};
+
+
+
+        // 🌟 Star Animation 🌟
+        const canvas = document.getElementById("starCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        const numStars = 200;
+
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2,
+                speed: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                star.y += star.speed;
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
+            });
+
+            requestAnimationFrame(animateStars);
+        }
+
+        animateStars();
+
+        function toggleMusic() {
+    const music = document.getElementById("music");
+    const playIcon = document.getElementById("playIcon");
+
+    if (music.paused) {
+        music.play();
+        playIcon.classList.remove("fa-play");
+        playIcon.classList.add("fa-pause");
+    } else {
+        music.pause();
+        playIcon.classList.remove("fa-pause");
+        playIcon.classList.add("fa-play");
+    }
+}
+const music = document.getElementById("music");
+const progress = document.getElementById("progress");
+const progressContainer = document.querySelector(".progress-container");
+
+music.addEventListener("timeupdate", () => {
+    const percent = (music.currentTime / music.duration) * 100;
+    progress.style.width = `${percent}%`;
+});
+
+function setProgress(event) {
+    const width = progressContainer.clientWidth;
+    const clickX = event.offsetX;
+    const duration = music.duration;
+
+    music.currentTime = (clickX / width) * duration;
+}
+
+function toggleMusic() {
+    const music = document.getElementById("music");
+    const playIcon = document.getElementById("playIcon");
+
+    if (music.paused) {
+        music.play();
+        playIcon.classList.remove("fa-play");
+        playIcon.classList.add("fa-pause");
+    } else {
+        music.pause();
+        playIcon.classList.remove("fa-pause");
+        playIcon.classList.add("fa-play");
+    }
+}
+
+
+    </script>
+
+
+    
+</body>
+</html>
